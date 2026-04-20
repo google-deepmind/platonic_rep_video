@@ -1,0 +1,127 @@
+[project]
+name = "vprh"
+description = "Dynamic Reflections: Probing Video Representations with Text Alignment"
+version = "0.0.1"
+readme = "README.md"
+requires-python = ">=3.13"
+keywords = ["video understanding", "platonic representation hypothesis", "multimodal", "large language models", "machine learning"]
+license = {file = "LICENSE"}
+classifiers = [
+    "Intended Audience :: Developers",
+    "Intended Audience :: Education",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: Apache 2.0 License",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+dependencies = [
+    "accelerate",
+    "datasets",
+    "einops",
+    "easydict", # for videomae
+    "pymp",
+    "sentencepiece",
+    "torch>=2.6.0",
+    "torchcodec",
+    "torchvision>=0.21.0",
+    "transformers>=4.56.1",
+    "timm",
+    "tqdm",
+    "tyro",
+    "matplotlib>=3.10.7",
+]
+
+[build-system]
+requires = ["uv_build>=0.9.18,<0.10.0"]
+build-backend = "uv_build"
+
+[project.urls]
+homepage = "https://video-prh.github.io"
+repository = "https://github.com/google-deepmind/platonic_rep_video"
+documentation = "https://github.com/google-deepmind/platonic_rep_video"
+
+[tool.ruff]
+line-length = 80
+indent-width = 2
+target-version = "py313"
+
+[tool.ruff.lint]
+# Enable specific linting rules
+# E: pycodestyle errors
+# F: Pyflakes
+# I: isort (imports sorting)
+# B: flake8-bugbear (common bugs)
+# select = ["E", "F", "I", "B"]
+# select = ["A", "B", "E", "F", "I", "RUF", "W"]
+select = [
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # Pyflakes
+    "I",    # isort (Import order)
+    "D",    # pydocstyle (Docstrings)
+    "N",    # pep8-naming (Naming conventions)
+    "UP",   # pyupgrade (Modern Python syntax)
+    "PL",   # Pylint rules
+    "Q",    # flake8-quotes (Quote consistency)
+    "TID",  # flake8-tidy-imports (Strict imports)
+    "PYI",  # flake8-pyi (Generic type hints)
+]
+ignore = [
+    "D104", # Docstring for public package
+    "D203", # one-blank-line-before-class (Incompatible with D211)
+    "D213", # multi-line-summary-second-line (Incompatible with D212)
+    "D406", # Section name should end with a newline
+    "D407", # Section underline is missing
+    "PLR0912",
+    "PLR0913",
+    "PLR0915",
+    "PLR2004",
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10
+
+[tool.ruff.lint.flake8-quotes]
+# Google prefers single quotes for strings
+inline-quotes = "single"
+multiline-quotes = "double"
+docstring-quotes = "double"
+
+[tool.ruff.lint.isort]
+# Google import sorting: alphabetical and grouped
+force-single-line = true
+lines-after-imports = 2
+known-first-party = ["platonic_rep_video"]
+
+[tool.ruff.format]
+# Ensure the formatter also respects the 2-space indentation
+indent-style = "space"
+quote-style = "single"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+[[tool.uv.index]]
+name = "pytorch-cu124"
+url = "https://download.pytorch.org/whl/cu124"
+explicit = true
+
+[tool.uv.sources]
+torch = [
+  { index = "pytorch-cu124", marker = "sys_platform == 'linux' or sys_platform == 'win32'" },
+]
+torchcodec = [
+  { index = "pytorch-cu124", marker = "sys_platform == 'linux' or sys_platform == 'win32'" },
+]
+torchvision = [
+  { index = "pytorch-cu124", marker = "sys_platform == 'linux' or sys_platform == 'win32'" },
+]
+
+[dependency-groups]
+dev = [
+    "pre-commit>=4.5.0",
+    "ruff>=0.14.7",
+]
