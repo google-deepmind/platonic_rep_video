@@ -153,8 +153,9 @@ def extract_llm_features(
 
   torch.save(save_dict, save_path)
 
-  torch.cuda.empty_cache()
-  torch.cuda.ipc_collect()
+  if torch.cuda.is_available():
+    torch.cuda.empty_cache()
+    torch.cuda.ipc_collect()
   gc.collect()
 
 
@@ -205,7 +206,7 @@ def extract_video_features(
     print('File ', save_path, ' DOES NOT exist')
 
   # ------ Instantiate model --------
-  video_model.to('cuda')
+  video_model.to('cuda' if torch.cuda.is_available() else 'cpu')
 
   # ------ Create Dataloader -------
   dataset.update_transforms(image_transform=video_model.preprocess)
@@ -226,7 +227,7 @@ def extract_video_features(
       dataset,
       batch_size=args.batch_size,
       shuffle=False,
-      num_workers=10,
+      num_workers=min(10, os.cpu_count() or 1),
       prefetch_factor=2,
   )
 
